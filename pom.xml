@@ -15,9 +15,9 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots</artifactId>
-            <version>6.5.0</version>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>1.4.2</version>
         </dependency>
     </dependencies>
 </project>
