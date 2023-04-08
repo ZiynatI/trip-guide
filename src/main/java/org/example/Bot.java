@@ -9,8 +9,13 @@ import java.net.URL;
 import java.util.stream.Collectors;
 
 public class Bot {
+    String token;
 
-    public void sendMessage(String message, String token, String chatId) throws IOException {
+    public Bot(String token) {
+        this.token = token;
+    }
+
+    public void sendMessage(String message, String chatId) throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&text=" + message);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
