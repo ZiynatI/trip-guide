@@ -10,13 +10,8 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String[] tokenChatId = getUrlWithoutMessage();
-        sendMessage("Hi)", tokenChatId[0], tokenChatId[1]);
-    }
-
-    public static String[] getUrlWithoutMessage() {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-        return new String[]{cfg.getString("telegram.bot.token"), cfg.getString("telegram.chatId")};
+        sendMessage("Hi)", cfg.getString("telegram.bot.token"), cfg.getString("telegram.chatId"));
     }
 
     public static void sendMessage(String message, String token, String chatId) throws IOException {
