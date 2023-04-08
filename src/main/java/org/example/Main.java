@@ -10,17 +10,18 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        sendMessage("Hi)");
+        String urlWithoutMessage = getUrlWithoutMessage();
+        sendMessage("Hi)", urlWithoutMessage);
     }
 
-    public static String makeConfig() {
+    public static String getUrlWithoutMessage() {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         return "https://api.telegram.org/bot" + cfg.getString("telegram.bot.token")
                 + "/sendMessage?chat_id=" + cfg.getString("telegram.chatId") + "&text=";
     }
 
-    public static void sendMessage(String s) throws IOException {
-        URL url = new URL(makeConfig() + s);
+    public static void sendMessage(String message, String urlWithoutMessage) throws IOException {
+        URL url = new URL(urlWithoutMessage + message);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
