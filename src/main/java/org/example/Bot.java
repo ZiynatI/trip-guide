@@ -19,7 +19,7 @@ public class Bot {
 
     public void sendMessage(String title,String message, String chatId) throws IOException {
         System.out.println(URLEncoder.encode(message,StandardCharsets.UTF_8));
-        URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&parse_mode=MarkdownV2" + "&text=" +   URLEncoder.encode(title + "\n" +correctReservedChars(message), StandardCharsets.UTF_8));
+        URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&parse_mode=MarkdownV2" + "&text=" +   URLEncoder.encode("*"+title+"*" + "\n" +correctReservedChars(message), StandardCharsets.UTF_8));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
