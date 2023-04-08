@@ -8,8 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class Bot {
@@ -32,12 +30,9 @@ public class Bot {
     }
 
     public static String correctReservedChars(String message) {
-        List<Character> list = Arrays.asList('!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']');
-        for (int i = 0; i < message.length(); i++) {
-            char current = message.charAt(i);
-            if (list.contains(current)) {
-                message = message.replace(Character.toString(current), "\\" + current);
-            }
+        Character[] reserved = new Character[]{'!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']' };
+        for (char c : reserved) {
+            message = message.replace(Character.toString(c), "\\" + c);
         }
         return message;
     }
