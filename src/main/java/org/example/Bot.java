@@ -32,15 +32,13 @@ public class Bot {
     }
 
     public static String correctReservedChars(String message) {
-        StringBuilder sb = new StringBuilder();
         List<Character> list = Arrays.asList('!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']');
         for (int i = 0; i < message.length(); i++) {
-            if (list.contains(message.charAt(i))) {
-                sb.append("\\").append(message.charAt(i));
-            } else {
-                sb.append(message.charAt(i));
+            char current = message.charAt(i);
+            if (list.contains(current)) {
+                message = message.replace(Character.toString(current), "\\" + current);
             }
         }
-        return sb.toString();
+        return message;
     }
 }
