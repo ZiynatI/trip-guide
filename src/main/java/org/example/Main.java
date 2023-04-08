@@ -10,13 +10,17 @@ import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        setConnectionSendMassage("Hi:)");
+        sendMessage("Hi)");
     }
 
-    public static void setConnectionSendMassage(String s) throws IOException {
+    public static String makeConfig() {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-        URL url = new URL("https://api.telegram.org/bot" + cfg.getString("telegram.bot.token")
-                + "/sendMessage?chat_id=" + cfg.getString("telegram.chatId") + "&text=" + s);
+        return "https://api.telegram.org/bot" + cfg.getString("telegram.bot.token")
+                + "/sendMessage?chat_id=" + cfg.getString("telegram.chatId") + "&text=";
+    }
+
+    public static void sendMessage(String s) throws IOException {
+        URL url = new URL(makeConfig() + s);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
