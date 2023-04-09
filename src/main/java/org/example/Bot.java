@@ -1,7 +1,6 @@
 package org.example;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -22,9 +21,9 @@ public class Bot {
         params.put("parse_mode", "MarkdownV2");
     }
 
-    public void sendMessage(String title, String message, String chatId) throws IOException {
+    public void sendMessage(String title, String message, String chatId) throws Exception {
         URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParamsToString()
-                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8));
+                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8) + "!");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
@@ -32,7 +31,7 @@ public class Bot {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             content = reader.lines().collect(Collectors.joining("\n"));
             if (content.substring(content.indexOf(':') + 1, content.indexOf(',')).equals("false")) {
-                throw new Error(content);
+                throw new Exception(content);
             }
             System.out.println(content);
         }
@@ -53,4 +52,5 @@ public class Bot {
         }
         return sb.toString();
     }
+
 }
