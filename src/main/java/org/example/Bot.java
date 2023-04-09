@@ -31,6 +31,10 @@ public class Bot {
         String content;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             content = reader.lines().collect(Collectors.joining("\n"));
+            if (content.substring(content.indexOf(':') + 1, content.indexOf(',')).equals("false")) {
+                throw new Error(content);
+            }
+            System.out.println(content);
         }
     }
 
