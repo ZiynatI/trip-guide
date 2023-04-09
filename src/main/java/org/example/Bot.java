@@ -14,10 +14,12 @@ import java.util.stream.Collectors;
 
 public class Bot {
     String token;
-    Map<String, String> params = setParams();
+    Map<String, String> params;
 
     public Bot(String token) {
         this.token = token;
+        this.params = new HashMap<>();
+        params.put("parse_mode", "MarkdownV2");
     }
 
     public void sendMessage(String title, String message, String chatId) throws IOException {
@@ -48,11 +50,5 @@ public class Bot {
             sb.append("&").append(param.getKey()).append("=").append(param.getValue());
         }
         return sb.toString();
-    }
-
-    private Map<String, String> setParams() {
-        Map<String, String> params = new HashMap<>();
-        params.put("parse_mode", "MarkdownV2");
-        return params;
     }
 }
