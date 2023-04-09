@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.prefs.BackingStoreException;
 import java.util.stream.Collectors;
 
 public class Bot {
@@ -31,7 +32,12 @@ public class Bot {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             content = reader.lines().collect(Collectors.joining("\n"));
             if (content.substring(content.indexOf(':') + 1, content.indexOf(',')).equals("false")) {
-                throw new Exception(content);
+                try {
+                    throw new BadRequestException(content);
+                } catch (BadRequestException e) {
+                    System.out.println(e.getExMessage());
+
+                }
             }
             System.out.println(content);
         }
@@ -53,4 +59,15 @@ public class Bot {
         return sb.toString();
     }
 
+    class BadRequestException extends Throwable {
+        String content;
+
+        public BadRequestException(String content) {
+            this.content = content;
+        }
+
+        public String getExMessage() {
+            return content.substring(content.indexOf("description") + 13);
+        }
+    }
 }
