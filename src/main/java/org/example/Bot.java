@@ -22,7 +22,7 @@ public class Bot {
         params.put("parse_mode", "MarkdownV2");
     }
 
-    public void sendMessage(String title, String message, String chatId) throws Exception {
+    public void sendMessage(String title, String message, String chatId) throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParamsToString()
                 + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8) + "!");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
