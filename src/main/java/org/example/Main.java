@@ -8,6 +8,8 @@ import java.io.*;
 public class Main {
     public static void main(String[] args) throws IOException {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-        new Bot(cfg.getString("telegram.bot.token")).sendMessage("Title!", "*Part two", cfg.getString("telegram.chatId"));
+        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
+        bot.setParam("parse_mode=MarkdownV2");
+        bot.sendMessage("Title! *Part two", "*Hello There!*", cfg.getString("telegram.chatId"));
     }
 }
