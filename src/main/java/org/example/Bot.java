@@ -8,13 +8,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Bot {
     String token;
-    List<String> params = new ArrayList<>();
+    Map<String, String> params = setParams();
 
     public Bot(String token) {
         this.token = token;
@@ -22,7 +22,7 @@ public class Bot {
 
     public void sendMessage(String title, String message, String chatId) throws IOException {
         System.out.println(URLEncoder.encode(message, StandardCharsets.UTF_8));
-        URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParams()
+        URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParamsToString()
                 + "&text=" + URLEncoder.encode("*" + correctReservedChars(title) + "*" + "\n" + correctReservedChars(message), StandardCharsets.UTF_8));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -42,15 +42,17 @@ public class Bot {
         return message;
     }
 
-    private String collectParams() {
+    private String collectParamsToString() {
         StringBuilder sb = new StringBuilder();
-        for (String param : this.params) {
-            sb.append("&").append(param);
+        for (Map.Entry<String, String> param : this.params.entrySet()) {
+            sb.append("&").append(param.getKey()).append("=").append(param.getValue());
         }
         return sb.toString();
     }
 
-    public void setParam(String param) {
-        params.add(param);
+    private Map<String, String> setParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("parse_mode", "MarkdownV2");
+        return params;
     }
 }
