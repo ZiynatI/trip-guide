@@ -26,19 +26,20 @@ public class Bot {
 
     public void sendMessage(String title, String message, String chatId) throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParamsToString()
-                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8));
+                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8) + "!");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
         String content;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             content = reader.lines().collect(Collectors.joining("\n"));
+            Map response = parse(content);
             if (content.substring(content.indexOf(':') + 1, content.indexOf(',')).equals("false")) {
-                throw new IOException(content);
+
+                throw new IOException("error_code:" + response.get("error_code") + response.get("description"));
             }
             System.out.println(content);
         }
-        parse(content);
     }
 
     public static String escapeReservedChars(String message) {
