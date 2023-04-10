@@ -59,7 +59,7 @@ public class Bot {
 
     public OkResponse parse(String content) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        OkResponse response = objectMapper.readValue(content, OkResponse.class);
-        return response;
+        OkResponse okResponse = objectMapper.readValue(content, OkResponse.class);
+        return okResponse;
     }
 }

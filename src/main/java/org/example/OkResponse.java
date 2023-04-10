@@ -1,14 +1,23 @@
 package org.example;
 
 public class OkResponse {
-    boolean ok;
+    private boolean ok;
     private Result result;
-    public OkResponse(){
 
+    public OkResponse() {
     }
-    public OkResponse(boolean ok,Result result){
-        this.ok=ok;
+
+    public OkResponse(boolean ok, Result result) {
+        this.ok = ok;
         this.result = result;
+    }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
     }
 
     public Result getResult() {
@@ -18,17 +27,22 @@ public class OkResponse {
     public void setResult(Result result) {
         this.result = result;
     }
+
+
 }
 
 class Result {
     private int message_id;
     private From from;
     private Chat chat;
-    private int date;
+    private long date;
     private String text;
     private SomeClass[] entities;
 
-    public Result(int message_id, From from, Chat chat, int date, String text, SomeClass[] entities) {
+    public Result() {
+    }
+
+    public Result(int message_id, From from, Chat chat, long date, String text, SomeClass[] entities) {
         this.message_id = message_id;
         this.from = from;
         this.chat = chat;
@@ -61,11 +75,11 @@ class Result {
         this.chat = chat;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -87,23 +101,26 @@ class Result {
 }
 
 class From {
-    private int id;
+    private long id;
     private boolean is_bot;
     private String first_name;
     private String username;
 
-    public From(int id, boolean is_bot, String first_name, String username) {
+    public From() {
+    }
+
+    public From(long id, boolean is_bot, String first_name, String username) {
         this.id = id;
         this.is_bot = is_bot;
         this.first_name = first_name;
         this.username = username;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -133,23 +150,26 @@ class From {
 }
 
 class Chat {
-    private int id;
+    private long id;
     private String first_name;
     private String username;
     private String type;
 
-    public Chat(int id, String first_name, String username, String type) {
+    public Chat() {
+    }
+
+    public Chat(long id, String first_name, String username, String type) {
         this.id = id;
         this.first_name = first_name;
         this.username = username;
         this.type = type;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -182,6 +202,9 @@ class SomeClass {
     private int offset;
     private int length;
     private String type;
+
+    public SomeClass() {
+    }
 
     public SomeClass(int offset, int length, String type) {
         this.offset = offset;
