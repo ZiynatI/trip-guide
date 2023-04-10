@@ -1,5 +1,8 @@
 package org.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,8 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Bot {
@@ -24,7 +26,7 @@ public class Bot {
 
     public void sendMessage(String title, String message, String chatId) throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + collectParamsToString()
-                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8) + "!");
+                + "&text=" + URLEncoder.encode("*" + escapeReservedChars(title) + "*" + "\n" + escapeReservedChars(message), StandardCharsets.UTF_8));
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
@@ -36,6 +38,7 @@ public class Bot {
             }
             System.out.println(content);
         }
+        parse(content);
     }
 
     public static String escapeReservedChars(String message) {
@@ -52,5 +55,11 @@ public class Bot {
             sb.append("&").append(param.getKey()).append("=").append(param.getValue());
         }
         return sb.toString();
+    }
+
+    public OkResponse parse(String content) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        OkResponse response = objectMapper.readValue(content, OkResponse.class);
+        return response;
     }
 }
