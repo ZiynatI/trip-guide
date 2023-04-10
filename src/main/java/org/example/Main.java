@@ -18,7 +18,7 @@ public class Main {
         bot.sendMessage("Select the city you are going to", citiesToString(), cfg.getString("telegram.chatId"));
         Thread.sleep(10000);
         int cityTo = bot.getCityNum();
-
+        bot.sendRequest();
     }
 
     private static List<String> cities() {
