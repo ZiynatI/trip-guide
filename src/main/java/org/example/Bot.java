@@ -57,9 +57,9 @@ public class Bot {
         return sb.toString();
     }
 
-    public OkResponse parse(String content) throws JsonProcessingException {
+    public Map parse(String content) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        OkResponse okResponse = objectMapper.readValue(content, OkResponse.class);
-        return okResponse;
+        HashMap map = objectMapper.readValue(content, HashMap.class);
+        return map;
     }
 }
