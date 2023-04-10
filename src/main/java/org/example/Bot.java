@@ -34,11 +34,10 @@ public class Bot {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             content = reader.lines().collect(Collectors.joining("\n"));
             Map response = parse(content);
-            if (content.substring(content.indexOf(':') + 1, content.indexOf(',')).equals("false")) {
-
+            System.out.println(response);
+            if (response.get("ok").equals("…false")) {
                 throw new IOException("error_code:" + response.get("error_code") + response.get("description"));
             }
-            System.out.println(content);
         }
     }
 
