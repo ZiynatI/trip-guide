@@ -44,7 +44,7 @@ public class Bot {
         }
     }
 
-    public int getCityNum() throws IOException {
+    public String getBotMessage() throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates?offset=-1");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
@@ -59,7 +59,7 @@ public class Bot {
                 throw new IOException("error_code:" + response.get("error_code") + response.get("description"));
             }
         }
-        return Integer.parseInt(content.substring(content.lastIndexOf(':') + 2, content.lastIndexOf('\"')));
+        return content.substring(content.lastIndexOf(':') + 2, content.lastIndexOf('\"'));
     }
 
     public void sendMessage(String title, String message, String chatId) throws IOException {
