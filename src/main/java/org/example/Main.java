@@ -4,7 +4,6 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import java.io.*;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         Bot bot = new Bot(cfg.getString("telegram.bot.token"));
-//        bot.sendMessage("Title! *Part two", "*Hello There!*", cfg.getString("telegram.chatId"));
         bot.sendMessage("Select the number of city you are leaving from", citiesToString(), cfg.getString("telegram.chatId"));
         Thread.sleep(10000);
         int cityFrom = Integer.parseInt(bot.getBotMessage());
@@ -20,7 +18,6 @@ public class Main {
         Thread.sleep(10000);
         int cityTo = Integer.parseInt(bot.getBotMessage());
         bot.sendMessage("Do you want to specify return date? Write \"YES\" or \"NO\"", citiesToString(), cfg.getString("telegram.chatId"));
-
         boolean withBackward = false;
         String backward = bot.getBotMessage();
         if (backward.equalsIgnoreCase("YES")) {
@@ -35,7 +32,11 @@ public class Main {
             bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
             backDate = bot.getBotMessage();
         }
-        bot.sendRequest();
+        new DataGetter().makeRequest();
+    }
+
+    public static void findTickets() {
+
     }
 
     private static List<String> cities() {

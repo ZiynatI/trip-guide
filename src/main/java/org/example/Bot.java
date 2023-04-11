@@ -19,30 +19,7 @@ public class Bot {
         params.put("parse_mode", "MarkdownV2");
     }
 
-    public void sendRequest() throws IOException {
-        URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
-//        String request = "POST /api/v1/trains/availability/space/between/stations HTTP/1.1\n" +
-//                "Host: e-ticket.railway.uz\n\n";
 
-        String postData = "stationFrom:2900000,stationTo:2900700,detailNumPlaces:1,showWithoutPlaces:0}";
-
-        URLConnection conn = url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Content-Length", Integer.toString(postData.length()));
-
-        try (DataOutputStream dos = new DataOutputStream(conn.getOutputStream())) {
-            dos.writeBytes(postData);
-        }
-
-        try (BufferedReader bf = new BufferedReader(new InputStreamReader(
-                conn.getInputStream()))) {
-            String line;
-            while ((line = bf.readLine()) != null) {
-                System.out.println(line);
-            }
-        }
-    }
 
     public String getBotMessage() throws IOException {
         URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates?offset=-1");
