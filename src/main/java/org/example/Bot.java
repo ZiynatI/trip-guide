@@ -10,15 +10,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Bot {
-    String token;
-    Map<String, String> params;
+    private String token;
+    private Map<String, String> params;
 
     public Bot(String token) {
         this.token = token;
         this.params = new HashMap<>();
         params.put("parse_mode", "MarkdownV2");
     }
-
 
 
     public String getBotMessage() throws IOException {
@@ -56,8 +55,8 @@ public class Bot {
         }
     }
 
-    public static String escapeReservedChars(String message) {
-        Character[] reserved = new Character[]{'!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']', '.' };
+    private static String escapeReservedChars(String message) {
+        Character[] reserved = new Character[]{'!', '*', '\'', '(', ')', ';', ':', '@', '&', '=', '+', '$', ',', '/', '?', '%', '#', '[', ']', '.'};
         for (char c : reserved) {
             message = message.replace(Character.toString(c), "\\" + c);
         }
@@ -72,7 +71,7 @@ public class Bot {
         return sb.toString();
     }
 
-    public Map parse(String content) throws JsonProcessingException {
+    private Map parse(String content) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap map = objectMapper.readValue(content, HashMap.class);
         return map;

@@ -9,34 +9,55 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
-        bot.sendMessage("Select the number of city you are leaving from", citiesToString(), cfg.getString("telegram.chatId"));
-        Thread.sleep(10000);
-        int cityFrom = Integer.parseInt(bot.getBotMessage());
-        bot.sendMessage("Select the city you are going to", citiesToString(), cfg.getString("telegram.chatId"));
-        Thread.sleep(10000);
-        int cityTo = Integer.parseInt(bot.getBotMessage());
-        bot.sendMessage("Do you want to specify return date? Write \"YES\" or \"NO\"", citiesToString(), cfg.getString("telegram.chatId"));
-        boolean withBackward = false;
-        String backward = bot.getBotMessage();
-        if (backward.equalsIgnoreCase("YES")) {
-            withBackward = true;
-        } else if (backward.equalsIgnoreCase("NO")) {
-            withBackward = false;
-        }
-        bot.sendMessage("Write date when you going to leave", citiesToString(), cfg.getString("telegram.chatId"));
-        String leavingDate = bot.getBotMessage();
-        String backDate;
-        if (withBackward) {
-            bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
-            backDate = bot.getBotMessage();
-        }
+//        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
+//        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
+//        bot.sendMessage("Select the number of city you are leaving from", citiesToString(), cfg.getString("telegram.chatId"));
+//        Thread.sleep(10000);
+//        int cityFrom = Integer.parseInt(bot.getBotMessage());
+//        bot.sendMessage("Select the city you are going to", citiesToString(), cfg.getString("telegram.chatId"));
+//        Thread.sleep(10000);
+//        int cityTo = Integer.parseInt(bot.getBotMessage());
+//        bot.sendMessage("Do you want to specify return date? Write \"YES\" or \"NO\"", citiesToString(), cfg.getString("telegram.chatId"));
+//        boolean withBackward = false;
+//        String backward = bot.getBotMessage();
+//        if (backward.equalsIgnoreCase("YES")) {
+//            withBackward = true;
+//        } else if (backward.equalsIgnoreCase("NO")) {
+//            withBackward = false;
+//        }
+//        bot.sendMessage("Write date when you going to leave", citiesToString(), cfg.getString("telegram.chatId"));
+//        String leavingDate = bot.getBotMessage();
+//        String backDate;
+//        if (withBackward) {
+//            bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
+//            backDate = bot.getBotMessage();
+//        }
         new DataGetter().makeRequest();
     }
 
-    public static void findTickets() {
-
+    public static void findTickets() throws IOException {
+//        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
+//        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
+//        bot.sendMessage("Select the number of city you are leaving from", citiesToString(), cfg.getString("telegram.chatId"));
+//        int cityFrom = Integer.parseInt(bot.getBotMessage());
+//        bot.sendMessage("Select the city you are going to", citiesToString(), cfg.getString("telegram.chatId"));
+//        int cityTo = Integer.parseInt(bot.getBotMessage());
+//        bot.sendMessage("Do you want to specify return date? Write \"YES\" or \"NO\"", citiesToString(), cfg.getString("telegram.chatId"));
+//        boolean withBackward = false;
+//        String backward = bot.getBotMessage();
+//        if (backward.equalsIgnoreCase("YES")) {
+//            withBackward = true;
+//        } else if (backward.equalsIgnoreCase("NO")) {
+//            withBackward = false;
+//        }
+//        bot.sendMessage("Write date when you going to leave", citiesToString(), cfg.getString("telegram.chatId"));
+//        String leavingDate = bot.getBotMessage();
+//        String backDate;
+//        if (withBackward) {
+//            bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
+//            backDate = bot.getBotMessage();
+//        }
+        new DataGetter().makeRequest();
     }
 
     private static List<String> cities() {
