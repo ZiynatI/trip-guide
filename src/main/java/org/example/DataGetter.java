@@ -1,15 +1,20 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class DataGetter {
     public void makeRequest() throws IOException {
         String postData = "{\"direction\":[{\"depDate\":\"13.04.2023\",\"fullday\":true,\"type\":\"Forward\"},{\"depDate\":\"17.04.2023\",\"fullday\":true,\"type\":\"Backward\"}],\"stationFrom\":\"2900000\",\"stationTo\":\"2900700\",\"detailNumPlaces\":1,\"showWithoutPlaces\":0}";
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, Object> jsonmap = mapper.readValue(postData, HashMap.class);
+        System.out.println(jsonmap.toString());
         URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         try {
@@ -19,7 +24,7 @@ public class DataGetter {
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
             con.setRequestProperty("Content-type", "application/json");
             try (OutputStream os = con.getOutputStream()) {
-                os.write(postData.getBytes(StandardCharsets.UTF_8));
+                os.write(mapper.writeValueAsBytes(jsonmap));
                 try (InputStream in = new BufferedInputStream(con.getInputStream())) {
                     String text = new BufferedReader(
                             new InputStreamReader(in, StandardCharsets.UTF_8))
@@ -31,6 +36,5 @@ public class DataGetter {
         } finally {
             con.disconnect();
         }
-
     }
 }
