@@ -12,34 +12,25 @@ public class DataGetter {
         try {
             URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setConnectTimeout(5000);
             con.setRequestProperty("Content-type", "application/json");
             con.setDoOutput(true);
             con.setRequestMethod("POST");
             con.setRequestProperty("Accept-Language", "en");
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
-            con.setRequestProperty("Origin", "https://e-ticket.railway.uz");
-            con.setRequestProperty("Connection", "keep-alive");
-            con.setRequestProperty("Referer", "https://e-ticket.railway.uz/en/home");
-            con.setRequestProperty("Sec-Fetch-Dest", "empty");
-            con.setRequestProperty("Sec-Fetch-Mode", "cors");
-            con.setRequestProperty("Sec-Fetch-Site", "same-origin");
 
-            OutputStream os = con.getOutputStream();
-            os.write(postData.getBytes(StandardCharsets.UTF_8));
-            os.close();
-
-            InputStream in = new BufferedInputStream(con.getInputStream());
-            String text = new BufferedReader(
-                    new InputStreamReader(in, StandardCharsets.UTF_8))
-                    .lines()
-                    .collect(Collectors.joining("\n"));
-            System.out.println(text);
-            in.close();
+            try (OutputStream os = con.getOutputStream()) {
+                os.write(postData.getBytes(StandardCharsets.UTF_8));
+                try (InputStream in = new BufferedInputStream(con.getInputStream())) {
+                    String text = new BufferedReader(
+                            new InputStreamReader(in, StandardCharsets.UTF_8))
+                            .lines()
+                            .collect(Collectors.joining("\n"));
+                    System.out.println(text);
+                }
+            }
             con.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
