@@ -14,7 +14,6 @@ public class DataGetter {
         String postData = "{\"direction\":[{\"depDate\":\"13.04.2023\",\"fullday\":true,\"type\":\"Forward\"},{\"depDate\":\"17.04.2023\",\"fullday\":true,\"type\":\"Backward\"}],\"stationFrom\":\"2900000\",\"stationTo\":\"2900700\",\"detailNumPlaces\":1,\"showWithoutPlaces\":0}";
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Object> jsonmap = mapper.readValue(postData, HashMap.class);
-        System.out.println(jsonmap.toString());
         URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         try {
@@ -24,7 +23,7 @@ public class DataGetter {
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
             con.setRequestProperty("Content-type", "application/json");
             try (OutputStream os = con.getOutputStream()) {
-                os.write(mapper.writeValueAsBytes(jsonmap));
+                os.write(mapper.writeValueAsString(jsonmap).getBytes());
                 try (InputStream in = new BufferedInputStream(con.getInputStream())) {
                     String text = new BufferedReader(
                             new InputStreamReader(in, StandardCharsets.UTF_8))
