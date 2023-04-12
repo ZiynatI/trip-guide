@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 public class DataGetter {
     public void makeRequest() {
@@ -14,12 +15,9 @@ public class DataGetter {
             con.setConnectTimeout(5000);
             con.setRequestProperty("Content-type", "application/json");
             con.setDoOutput(true);
-            con.setDoOutput(true);
             con.setRequestMethod("POST");
-            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0");
             con.setRequestProperty("Accept-Language", "en");
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
-            con.setRequestProperty("device-type", "BROWSER");
             con.setRequestProperty("Origin", "https://e-ticket.railway.uz");
             con.setRequestProperty("Connection", "keep-alive");
             con.setRequestProperty("Referer", "https://e-ticket.railway.uz/en/home");
@@ -32,15 +30,11 @@ public class DataGetter {
             os.close();
 
             InputStream in = new BufferedInputStream(con.getInputStream());
-            StringBuilder textBuilder = new StringBuilder();
-            try (Reader reader = new BufferedReader(new InputStreamReader
-                    (in, StandardCharsets.UTF_8))) {
-                int c = 0;
-                while ((c = reader.read()) != -1) {
-                    textBuilder.append((char) c);
-                }
-            }
-            System.out.println(textBuilder);
+            String text = new BufferedReader(
+                    new InputStreamReader(in, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+            System.out.println(text);
             in.close();
             con.disconnect();
         } catch (Exception e) {
