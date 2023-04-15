@@ -6,7 +6,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DataGetter {
@@ -35,5 +37,31 @@ public class DataGetter {
         } finally {
             con.disconnect();
         }
+    }
+
+    private static List<Train> getTrainsFromString(String text) {
+        List<Train> list = new ArrayList<>();
+        String copy = new String(text);
+        while (copy.contains("\"length\"")) {
+            Train train = new Train();
+            copy = copy.substring(copy.indexOf("\"length\""));
+            String s = copy.substring(10, copy.indexOf(',') - 1);
+            train.setLength(s);
+
+            copy = copy.substring(copy.indexOf("\"type\""));
+            s = copy.substring(8, copy.indexOf(',') - 1);
+            train.setType(s);
+
+            copy = copy.substring(copy.indexOf("\"number\""));
+            s = copy.substring(10, copy.indexOf(',') - 1);
+            train.setNumber(s);
+
+            copy = copy.substring(copy.indexOf("\"brand\""));
+            s = copy.substring(9, copy.indexOf(',') - 1);
+            train.setBrand(s);
+
+            list.add(train);
+        }
+        return list;
     }
 }
