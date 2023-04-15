@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
@@ -27,11 +28,8 @@ public class DataGetter {
             try (OutputStream os = con.getOutputStream()) {
                 os.write(mapper.writeValueAsString(jsonmap).getBytes());
                 try (InputStream in = new BufferedInputStream(con.getInputStream())) {
-                    String text = new BufferedReader(
-                            new InputStreamReader(in, StandardCharsets.UTF_8))
-                            .lines()
-                            .collect(Collectors.joining("\n"));
-                    System.out.println(text);
+                    JsonNode jsonMap = mapper.readTree(in);
+getTrainsFromString(jsonMap);
                 }
             }
         } finally {
@@ -39,29 +37,8 @@ public class DataGetter {
         }
     }
 
-    private static List<Train> getTrainsFromString(String text) {
-        List<Train> list = new ArrayList<>();
-        String copy = new String(text);
-        while (copy.contains("\"length\"")) {
-            Train train = new Train();
-            copy = copy.substring(copy.indexOf("\"length\""));
-            String s = copy.substring(10, copy.indexOf(',') - 1);
-            train.setLength(s);
-
-            copy = copy.substring(copy.indexOf("\"type\""));
-            s = copy.substring(8, copy.indexOf(',') - 1);
-            train.setType(s);
-
-            copy = copy.substring(copy.indexOf("\"number\""));
-            s = copy.substring(10, copy.indexOf(',') - 1);
-            train.setNumber(s);
-
-            copy = copy.substring(copy.indexOf("\"brand\""));
-            s = copy.substring(9, copy.indexOf(',') - 1);
-            train.setBrand(s);
-
-            list.add(train);
-        }
-        return list;
+    private static List<Train> getTrainsFromString(JsonNode jsonMap) {
+        JsonNode bpi = jsonMap.get("express").get("direction").get(0);
+        return null;
     }
 }
