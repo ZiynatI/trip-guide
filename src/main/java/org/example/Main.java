@@ -8,8 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        new DataGetter().makeRequest();
+    public static void main(String[] args) throws IOException {
+        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
+        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
+        DataGetter dataGetter = new DataGetter();
+        bot.sendMessage("Tickets from Tashkent to Samarkand for May13:\n",
+                trainListToMessage(DataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse())),
+                cfg.getString("telegram.chatId"));
     }
 
     public static void findTickets() throws IOException {
@@ -34,7 +39,7 @@ public class Main {
             bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
             backDate = bot.getBotMessage();
         }
-        new DataGetter().makeRequest();
+        new DataGetter().makeRequestGetResponse();
     }
 
     private static List<String> cities() {
@@ -62,6 +67,16 @@ public class Main {
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= cities().size(); i++) {
             sb.append(i).append(". ").append(cities().get(i - 1)).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private static String trainListToMessage(List<Train> trains) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < trains.size(); i++) {
+            if (trains.get(i).countFreeSeats() != 0) {
+                sb.append(trains.get(i));
+            }
         }
         return sb.toString();
     }
