@@ -7,15 +7,15 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataGetter {
     public JsonNode makeRequestGetResponse() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse;
-        JsonNode jsonRequest = mapper.readValue("{\"direction\":[{\"depDate\":\"13.05.2023\"," +
-                "\"fullday\":true,\"type\":\"Forward\"}],\"stationFrom\":\"2900000\",\"stationTo\":\"2900700\"," +
-                "\"detailNumPlaces\":1,\"showWithoutPlaces\":0}", JsonNode.class);
+        Map<String,Object> jsonRequest = collectJsonRequest();
         URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         try {
@@ -69,5 +69,20 @@ public class DataGetter {
             trainsList.add(train);
         }
         return trainsList;
+    }
+
+    public static Map<String, Object> collectJsonRequest() {
+        Map<String, Object> jsonRequest = new HashMap<>();
+        Map<String, Object> direction = new HashMap<>();
+        direction.put("depDate", "13.05.2023");
+        direction.put("fullday", true);
+        direction.put("type", "Forward");
+        Object[] directionArr = new Object[]{direction};
+        jsonRequest.put("direction", directionArr);
+        jsonRequest.put("stationFrom", "2900000");
+        jsonRequest.put("stationTo", "2900700");
+        jsonRequest.put("detailNumPlaces", 1);
+        jsonRequest.put("showWithoutPlaces", 0);
+        return jsonRequest;
     }
 }
