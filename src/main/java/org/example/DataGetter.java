@@ -15,7 +15,7 @@ public class DataGetter {
     public JsonNode makeRequestGetResponse() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse;
-        Map<String,Object> jsonRequest = collectJsonRequest();
+        Map jsonRequest = collectJsonRequest();
         URL url = new URL("https://e-ticket.railway.uz/api/v1/trains/availability/space/between/stations");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         try {
@@ -71,9 +71,9 @@ public class DataGetter {
         return trainsList;
     }
 
-    public static Map<String, Object> collectJsonRequest() {
-        Map<String, Object> jsonRequest = new HashMap<>();
-        Map<String, Object> direction = new HashMap<>();
+    public static Map collectJsonRequest() {
+        Map jsonRequest = new HashMap<>();
+        Map direction = new HashMap<>();
         direction.put("depDate", "13.05.2023");
         direction.put("fullday", true);
         direction.put("type", "Forward");
