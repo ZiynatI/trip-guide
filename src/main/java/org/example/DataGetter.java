@@ -12,6 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 public class DataGetter {
+    String depDate;
+    int stationFrom;
+    int stationTo;
+
+    public DataGetter(String depDate, int stationFrom, int stationTo) {
+        this.depDate = depDate;
+        this.stationFrom = stationFrom;
+        this.stationTo = stationTo;
+    }
+
     public JsonNode makeRequestGetResponse() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonResponse;
@@ -37,7 +47,7 @@ public class DataGetter {
         return jsonResponse;
     }
 
-    public static List<Train> jsonToTrainsList(JsonNode jsonMap) {
+    public List<Train> jsonToTrainsList(JsonNode jsonMap) {
         JsonNode response = jsonMap.get("express").get("direction").get(0).get("trains").get(0).get("train");
         List<Train> trainsList = new ArrayList<>();
 
@@ -71,16 +81,16 @@ public class DataGetter {
         return trainsList;
     }
 
-    private static Map makeJsonRequestMap() {
+    private Map makeJsonRequestMap() {
         Map jsonRequest = new HashMap<>();
         Map direction = new HashMap<>();
-        direction.put("depDate", "13.05.2023");
+        direction.put("depDate", depDate);
         direction.put("fullday", true);
         direction.put("type", "Forward");
         Object[] directionArr = new Object[]{direction};
         jsonRequest.put("direction", directionArr);
-        jsonRequest.put("stationFrom", "2900000");
-        jsonRequest.put("stationTo", "2900700");
+        jsonRequest.put("stationFrom", stationFrom);
+        jsonRequest.put("stationTo", stationTo);
         jsonRequest.put("detailNumPlaces", 1);
         jsonRequest.put("showWithoutPlaces", 0);
         return jsonRequest;
