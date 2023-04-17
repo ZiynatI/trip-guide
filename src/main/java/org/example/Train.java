@@ -3,103 +3,39 @@ package org.example;
 import java.util.List;
 
 public class Train {
-    private String length;
-    private String type;
-    private String number;
-    private String brand;
-    private String stationFrom;
-    private String stationTo;
-    private List<Place> places;
-    private String timeInWay;
-    private String departureTime;
-    private String arrivalTime;
 
-    public String getLength() {
-        return length;
-    }
+    private final int length;
+    private final String type;
+    private final String number;
+    private final String brand;
+    private final String stationFrom;
+    private final String stationTo;
+    private final List<Place> places;
+    private final String timeInWay;
+    private final String departureTime;
+    private final String arrivalTime;
 
-    public void setLength(String length) {
+    public Train(int length, String type, String number, String brand,
+                 String stationFrom, String stationTo, List<Place> places,
+                 String timeInWay, String departureTime, String arrivalTime) {
         this.length = length;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
         this.type = type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
         this.number = number;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public void setStationTo(String st) {
-        this.stationTo = st;
-    }
-
-    public String getStationTo() {
-        return stationTo;
-    }
-
-    public void setStationFrom(String sf) {
-        this.stationFrom = sf;
-    }
-
-    public String getStationFrom() {
-        return stationFrom;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Place> places) {
+        this.stationFrom = stationFrom;
+        this.stationTo = stationTo;
         this.places = places;
-    }
-
-    public String getTimeInWay() {
-        return timeInWay;
-    }
-
-    public void setTimeInWay(String timeInWay) {
         this.timeInWay = timeInWay;
-    }
-
-    public String getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
-    }
-
-
-    public String getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
     @Override
     public String toString() {
-        String result = "Train\n" +
+        String result = "______Train______\n" +
                 "Train length " + length + '\n' +
                 "Train type " + type + '\n' +
+                "Train number " + number + '\n' +
                 "Train brand " + brand + '\n' +
                 "Departure station " + stationFrom + '\n' +
                 "Arrival station " + stationTo + '\n' +
@@ -107,48 +43,34 @@ public class Train {
                 "Departure Time " + departureTime + '\n' +
                 "Arrival Time " + arrivalTime + '\n';
         StringBuilder sb = new StringBuilder("Places: ");
-        for (int i = 0; i < this.places.size(); i++) {
-            sb.append(this.places.get(i).toString());
+        for (Place place : this.places) {
+            sb.append(place.toString());
         }
-        return result + sb.toString();
+        return result + sb;
     }
 
     public int countFreeSeats() {
         int freeSeatsNum = 0;
-        for (int i = 0; i < this.places.size(); i++) {
-            freeSeatsNum += places.get(i).getFreeSeats();
+        for (Place place : this.places) {
+            freeSeatsNum += place.getFreeSeats();
         }
         return freeSeatsNum;
     }
 }
 
 class Place {
-    private String type;
-    private int price;
-    private int freeSeats;
+    private final String type;
+    private final int price;
+    private final int freeSeats;
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
+    public Place(String type, int price, int freeSeats) {
         this.type = type;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
         this.price = price;
+        this.freeSeats = freeSeats;
     }
 
     public int getFreeSeats() {
         return freeSeats;
-    }
-
-    public void setFreeSeats(int freeSeats) {
-        this.freeSeats = freeSeats;
     }
 
     @Override
