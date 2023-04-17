@@ -38,7 +38,7 @@ public class Main {
                 cfg.getString("telegram.chatId"),
                 "Write date when you going to leave\n",
                 "Format: 'dd.mm.yyyy';\nExample: '01.01.2024'",
-                x -> (x.equals("13.05.2023")));
+                x -> (x.matches("^(0?[1-9]|[12][0-9]|3[01]).\\..(0?[1-9]|1[012]).\\..(\\d{4}$\n).")));
 //        bot.sendMessage("", "Do you want to specify return date? Write \"YES\" or \"NO\"", cfg.getString("telegram.chatId"));
 //        boolean withBackward = false;
 //        String backward = bot.getBotMessage();
@@ -58,8 +58,7 @@ public class Main {
         bot.sendMessage("Tickets from Tashkent to Samarkand for " + date, message, cfg.getString("telegram.chatId"));
     }
 
-    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request,
-                                                 Function<String, Boolean> f) throws IOException {
+    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> f) throws IOException {
         String s = "";
         boolean isValidRequest = false;
         while (!isValidRequest) {
