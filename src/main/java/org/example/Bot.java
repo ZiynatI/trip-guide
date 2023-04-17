@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Bot {
-    private String token;
+    private final String token;
     private Map<String, String> params;
 
     public Bot(String token) {

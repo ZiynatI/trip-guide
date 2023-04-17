@@ -73,9 +73,9 @@ public class Main {
 
     private static String trainListToMessage(List<Train> trains) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < trains.size(); i++) {
-            if (trains.get(i).countFreeSeats() != 0) {
-                sb.append(trains.get(i));
+        for (Train train : trains) {
+            if (train.countFreeSeats() != 0) {
+                sb.append(train);
             }
         }
         return sb.toString();
