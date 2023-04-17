@@ -24,9 +24,21 @@ public class Main {
     public static void findTickets() throws IOException {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         Bot bot = new Bot(cfg.getString("telegram.bot.token"));
-        String cityFromNumInList = repeatUntilChosenRight(bot, cfg.getString("telegram.chatId"), "Select the number of city you are leaving from", citiesToString(), x -> ((Integer.parseInt(x) > 0 && Integer.parseInt(x) <= cities().size())));
-        String cityToNumInList = repeatUntilChosenRight(bot, cfg.getString("telegram.chatId"), "Select the city you are going to", citiesToString(), x -> ((Integer.parseInt(x) > 0 && Integer.parseInt(x) <= cities().size())));
-        String date = repeatUntilChosenRight(bot, cfg.getString("telegram.chatId"), "Write date when you going to leave\n", "Format: 'dd.mm.yyyy';\nExample: '01.01.2024'", x -> (x.equals("13.05.2023")));
+        String cityFromNumInList = repeatUntilChosenRight(bot,
+                cfg.getString("telegram.chatId"),
+                "Select the number of city you are leaving from",
+                citiesToString(),
+                x -> ((Integer.parseInt(x) > 0 && Integer.parseInt(x) <= cities().size())));
+        String cityToNumInList = repeatUntilChosenRight(bot,
+                cfg.getString("telegram.chatId"),
+                "Select the city you are going to",
+                citiesToString(),
+                x -> ((Integer.parseInt(x) > 0 && Integer.parseInt(x) <= cities().size())));
+        String date = repeatUntilChosenRight(bot,
+                cfg.getString("telegram.chatId"),
+                "Write date when you going to leave\n",
+                "Format: 'dd.mm.yyyy';\nExample: '01.01.2024'",
+                x -> (x.equals("13.05.2023")));
 //        bot.sendMessage("", "Do you want to specify return date? Write \"YES\" or \"NO\"", cfg.getString("telegram.chatId"));
 //        boolean withBackward = false;
 //        String backward = bot.getBotMessage();
@@ -40,12 +52,14 @@ public class Main {
 //            bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
 //            backDate = bot.getBotMessage();
 //        }
-        DataGetter dataGetter = new DataGetter(date, getStationsCode(cities().get(Integer.parseInt(cityFromNumInList))), getStationsCode(cities().get(Integer.parseInt(cityToNumInList))));
+        DataGetter dataGetter = new DataGetter(date, getStationsCode(cities().get(Integer.parseInt(cityFromNumInList))),
+                getStationsCode(cities().get(Integer.parseInt(cityToNumInList))));
         String message = trainListToMessage(dataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse()));
         bot.sendMessage("Tickets from Tashkent to Samarkand for " + date, message, cfg.getString("telegram.chatId"));
     }
 
-    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> f) throws IOException {
+    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request,
+                                                 Function<String, Boolean> f) throws IOException {
         String s = "";
         boolean isValidRequest = false;
         while (!isValidRequest) {
