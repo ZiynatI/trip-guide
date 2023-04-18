@@ -38,7 +38,7 @@ public class Main {
                 cfg.getString("telegram.chatId"),
                 "Write date when you going to leave\n",
                 "Format: 'dd.mm.yyyy';\nExample: '01.01.2024'",
-                x -> (x.matches("^(0?[1-9]|[12][0-9]|3[01]).\\..(0?[1-9]|1[012]).\\..(\\d{4}$\n).")));
+                x -> (x.matches("^([0-2][0-9]|(3)[0-1])(\\.)(((0)[0-9])|((1)[0-2]))(\\.)\\d{4}$")));
 //        bot.sendMessage("", "Do you want to specify return date? Write \"YES\" or \"NO\"", cfg.getString("telegram.chatId"));
 //        boolean withBackward = false;
 //        String backward = bot.getBotMessage();
