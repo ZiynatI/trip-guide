@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Main {
+    private int lastUpdateId;
+
     public static void main(String[] args) throws IOException {
         findTickets();
 //        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
@@ -22,6 +24,7 @@ public class Main {
     }
 
     public static void findTickets() throws IOException {
+//        repeatUntilChosenRight();
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         Bot bot = new Bot(cfg.getString("telegram.bot.token"));
         String cityFromNumInList = repeatUntilChosenRight(bot,
@@ -58,13 +61,26 @@ public class Main {
         bot.sendMessage("Tickets from Tashkent to Samarkand for " + date, message, cfg.getString("telegram.chatId"));
     }
 
-    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> f) throws IOException {
+    private static String getYesResponse(Bot bot, String chatId) throws IOException {
+        String s = "";
+        boolean userSaidYes = false;
+        while (!userSaidYes) {
+            bot.sendMessage("Do you want to look for tickets?", "Text \"YES\" if you want to", chatId);
+            s = bot.getBotMessage();
+            if (s.equalsIgnoreCase("YES")) {
+                userSaidYes = true;
+            }
+        }
+        return s;
+    }
+
+    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> validate) throws IOException {
         String s = "";
         boolean isValidRequest = false;
         while (!isValidRequest) {
             bot.sendMessage(requestTitle, request, chatId);
             s = bot.getBotMessage();
-            isValidRequest = f.apply(s);
+            isValidRequest = validate.apply(s);
         }
         return s;
     }
