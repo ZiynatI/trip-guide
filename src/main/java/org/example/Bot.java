@@ -20,22 +20,6 @@ public class Bot {
         this.params = new HashMap<>();
         params.put("parse_mode", "MarkdownV2");
     }
-public void sendMessageToItself() throws IOException{
-    URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + token + collectParamsToString()
-            + "&text=" + URLEncoder.encode("*" + escapeReservedChars("hi") + "*" + "\n" + escapeReservedChars("message"), StandardCharsets.UTF_8));
-    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-    con.setRequestMethod("GET");
-    InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream();
-    String content;
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-        content = reader.lines().collect(Collectors.joining("\n"));
-        Map response = parse(content);
-        System.out.println(response);
-        if (response.get("ok").equals("false")) {
-            throw new IOException("error_code:" + response.get("error_code") + response.get("description"));
-        }
-    }
-}
 
     public String getBotMessage() throws IOException {
         updateLastUpdateId();
@@ -43,7 +27,7 @@ public void sendMessageToItself() throws IOException{
         String messageText;
         JsonNode jsonResponse;
         while (true) {
-            URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates?offset=-100" + nextUpdateId);
+            URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates?offset=-1");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             ObjectMapper mapper = new ObjectMapper();
@@ -52,7 +36,9 @@ public void sendMessageToItself() throws IOException{
                 if (jsonResponse.get("ok").asText().equals("false")) {
                     throw new IOException("error_code:" + jsonResponse.get("error_code") + jsonResponse.get("description"));
                 }
-                if (jsonResponse.get("result").get(0) != null) {
+                if (jsonResponse.get("result").get(0) == null) {
+                    throw new NullPointerException();
+                }else {
                     messageText = jsonResponse.get("result").get(0).get("message").get("text").asText();
                     break;
                 }
@@ -98,6 +84,31 @@ public void sendMessageToItself() throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         HashMap map = objectMapper.readValue(content, HashMap.class);
         return map;
+    }
+
+    public boolean getUpdateIdAtBeginning(String s, String chatId) throws IOException {
+        sendMessage(s, "Send \"YES\" if you want to", chatId);
+        JsonNode jsonResponse;
+        while (true) {
+            URL url = new URL("https://api.telegram.org/bot" + token + "/getUpdates?offset=-1");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            ObjectMapper mapper = new ObjectMapper();
+            try (InputStream is = con.getResponseCode() <= 299 ? con.getInputStream() : con.getErrorStream()) {
+                jsonResponse = mapper.readTree(is);
+                if (jsonResponse.get("ok").asText().equals("false")) {
+                    throw new IOException("error_code:" + jsonResponse.get("error_code") + jsonResponse.get("description"));
+                }
+                if (jsonResponse.get("result").get(0) == null) {
+                    throw new NullPointerException();
+                } else {
+                    lastUpdateId = jsonResponse.get("result").get(0).get("update_id").asInt();
+                    if (jsonResponse.get("result").get(0).get("message").get("text").asText().equalsIgnoreCase("YES")) {
+                        return true;
+                    }
+                }
+            }
+        }
     }
 
     public void updateLastUpdateId() throws IOException {
