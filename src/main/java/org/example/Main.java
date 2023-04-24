@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Main {
-    private int lastUpdateId;
-
     public static void main(String[] args) throws IOException {
         findTickets();
 //        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
@@ -26,7 +24,6 @@ public class Main {
     public static void findTickets() throws IOException {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         Bot bot = new Bot(cfg.getString("telegram.bot.token"));
-        bot.getUpdateIdAtBeginning("Do you want to find tickets", cfg.getString("telegram.chatId"));
         String cityFromNumInList = repeatUntilChosenRight(bot,
                 cfg.getString("telegram.chatId"),
                 "Select the number of city you are leaving from",
@@ -61,14 +58,13 @@ public class Main {
         bot.sendMessage("Tickets from Tashkent to Samarkand for " + date, message, cfg.getString("telegram.chatId"));
     }
 
-    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> validate) throws IOException {
+    private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> f) throws IOException {
         String s = "";
         boolean isValidRequest = false;
         while (!isValidRequest) {
             bot.sendMessage(requestTitle, request, chatId);
-            while (s.equals("")){
-            s = bot.getBotMessage();}
-            isValidRequest = validate.apply(s);
+            s = bot.getBotMessage();
+            isValidRequest = f.apply(s);
         }
         return s;
     }
