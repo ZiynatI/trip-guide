@@ -37,16 +37,14 @@ public class DataGetter {
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
             con.setRequestProperty("Content-type", "application/json");
             con.setRequestProperty("device-type", "BROWSER");
-            con.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoiZDM5MzJjMGEtYmU0MC00MjNmLTk2MzUtMDM5ZjUzMTE1YWFlIiwic3ViIjoiZ29vZ2xlXzEwODE1MzY2MjgxMzY3NzIzNDMxNCIsImlhdCI6MTY4MjMyOTU2OSwiZXhwIjoxNjgyMzMzMTY5fQ.ii2TDHPw1dTwkahRh_FCvKr4PJ-qjiG5hGYKn72sF9o");
+            con.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoiZDM5MzJjMGEtYmU0MC00MjNmLTk2MzUtMDM5ZjUzMTE1YWFlIiwic3ViIjoiZ29vZ2xlXzEwODE1MzY2MjgxMzY3NzIzNDMxNCIsImlhdCI6MTY4MjUxNTA4OSwiZXhwIjoxNjgyNTE4Njg5fQ.v8EK6Ogpb9aw6tFxiJwWrBN62U9_geMZlnRXrihg38w");
             con.setRequestProperty("Origin", "https://e-ticket.railway.uz");
             con.setRequestProperty("Connection", "keep-alive");
-            con.setRequestProperty("Referer","https://e-ticket.railway.uz/en/home");
+            con.setRequestProperty("Referer", "https://e-ticket.railway.uz/en/home");
             con.setRequestProperty("Cookie", "__stripe_mid=a418abf1-9ac0-431e-a736-d77999d6578497fd0e; G_ENABLED_IDPS=google; __stripe_sid=96a26f19-1a13-425b-a885-61c2ce0d97bf55c753");
             con.setRequestProperty("Sec-Fetch-Dest", "empty");
             con.setRequestProperty("Sec-Fetch-Mode", "cors");
             con.setRequestProperty("Sec-Fetch-Site", "same-origin");
-
-
             try (OutputStream os = con.getOutputStream()) {
                 os.write(mapper.writeValueAsString(jsonRequest).getBytes());
                 try (InputStream in = new BufferedInputStream(con.getInputStream())) {

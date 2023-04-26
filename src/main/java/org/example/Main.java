@@ -13,17 +13,12 @@ import java.util.function.Function;
 public class Main {
     public static void main(String[] args) throws IOException {
         findTickets();
-//        Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-//        Bot bot = new Bot(cfg.getString("telegram.bot.token"));
-//        DataGetter dataGetter = new DataGetter();
-//        bot.sendMessage("Tickets from Tashkent to Samarkand for May13:\n",
-//                trainListToMessage(dataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse())),
-//                cfg.getString("telegram.chatId"));
     }
 
     public static void findTickets() throws IOException {
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
         Bot bot = new Bot(cfg.getString("telegram.bot.token"));
+        bot.sendFirstMessageSetLastUpdateId(cfg.getString("telegram.chatId"));
         String cityFromNumInList = repeatUntilChosenRight(bot,
                 cfg.getString("telegram.chatId"),
                 "Select the number of city you are leaving from",
@@ -39,19 +34,6 @@ public class Main {
                 "Write date when you going to leave\n",
                 "Format: 'dd.mm.yyyy';\nExample: '01.01.2024'",
                 x -> (x.matches("^([0-2][0-9]|(3)[0-1])(\\.)(((0)[0-9])|((1)[0-2]))(\\.)\\d{4}$")));
-//        bot.sendMessage("", "Do you want to specify return date? Write \"YES\" or \"NO\"", cfg.getString("telegram.chatId"));
-//        boolean withBackward = false;
-//        String backward = bot.getBotMessage();
-//        if (backward.equalsIgnoreCase("YES")) {
-//            withBackward = true;
-//        } else if (backward.equalsIgnoreCase("NO")) {
-//            withBackward = false;
-//        }
-//        String backDate;
-//        if (withBackward) {
-//            bot.sendMessage("Write date when you going to come back", citiesToString(), cfg.getString("telegram.chatId"));
-//            backDate = bot.getBotMessage();
-//        }
         DataGetter dataGetter = new DataGetter(date, getStationsCode(cities().get(Integer.parseInt(cityFromNumInList))),
                 getStationsCode(cities().get(Integer.parseInt(cityToNumInList))));
         String message = trainListToMessage(dataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse()));
@@ -61,8 +43,8 @@ public class Main {
     private static String repeatUntilChosenRight(Bot bot, String chatId, String requestTitle, String request, Function<String, Boolean> f) throws IOException {
         String s = "";
         boolean isValidRequest = false;
+        bot.sendMessage(requestTitle, request, chatId);
         while (!isValidRequest) {
-            bot.sendMessage(requestTitle, request, chatId);
             s = bot.getBotMessage();
             isValidRequest = f.apply(s);
         }
