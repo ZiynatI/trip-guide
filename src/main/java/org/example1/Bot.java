@@ -19,8 +19,9 @@ public class Bot extends TelegramLongPollingBot {
     private final String botToken;
     private final String botUserName;
     private LinkedList<String> messages;
-
-
+    private String arrival = "not_selected";
+    private String departure = "not_selected";
+    private String date = "not_selected";
     private List<List<InlineKeyboardButton>> stationButtons;
 
     public Bot(String botToken, String botUserName) {
@@ -64,11 +65,16 @@ public class Bot extends TelegramLongPollingBot {
         String newTemp = param[1];
         switch (action) {
             case "departure":
+                departure = newTemp;
             case "arrival":
+                arrival = newTemp;
         }
     }
 
     private void handleMassage(Message message) throws TelegramApiException {
+        if (message.getText().matches("^([0-2][0-9]|(3)[0-1])(\\.)(((0)[0-9])|((1)[0-2]))(\\.)\\d{4}$")) {
+            date = message.getText();
+        }
         if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> commandEntity = message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
             if (commandEntity.isPresent()) {
@@ -107,4 +113,29 @@ public class Bot extends TelegramLongPollingBot {
     public void setStationButtons(List<List<InlineKeyboardButton>> stationButtons) {
         this.stationButtons = stationButtons;
     }
+
+    public String getArrival() {
+        return arrival;
+    }
+
+    public void setArrival(String arrival) {
+        this.arrival = arrival;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 }
