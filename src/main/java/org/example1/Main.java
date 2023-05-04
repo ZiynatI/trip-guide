@@ -36,7 +36,7 @@ public class Main {
 
         }
         bot.setStationButtons(stationButtons);
-        bot.sendText(cfg.getString("telegram.bot.token"), "please,choose arrival date");
+        bot.sendText(cfg.getString("telegram.chatId"), "please,choose arrival date");
         while (true) {
             if (!bot.getDate().equals("not_selected") && !bot.getDeparture().equals("not_selected") && !bot.getArrival().equals("not_selected")) {
                 DataGetter dataGetter = new DataGetter(bot.getDate(), stationCode.get(bot.getDeparture()),
