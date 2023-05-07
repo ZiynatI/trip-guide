@@ -20,6 +20,7 @@ public class DataGetter {
         this.depDate = depDate;
         this.stationFrom = stationFrom;
         this.stationTo = stationTo;
+        System.out.println("dg active");
     }
 
     public JsonNode makeRequestGetResponse() throws IOException {
@@ -35,7 +36,6 @@ public class DataGetter {
             con.setRequestProperty("Accept-Language", "en");
             con.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
             con.setRequestProperty("Content-type", "application/json");
-            con.setRequestProperty("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiIsImlkIjoiZDM5MzJjMGEtYmU0MC00MjNmLTk2MzUtMDM5ZjUzMTE1YWFlIiwic3ViIjoiZ29vZ2xlXzEwODE1MzY2MjgxMzY3NzIzNDMxNCIsImlhdCI6MTY4MjUxNTA4OSwiZXhwIjoxNjgyNTE4Njg5fQ.v8EK6Ogpb9aw6tFxiJwWrBN62U9_geMZlnRXrihg38w");
             try (OutputStream os = con.getOutputStream()) {
                 os.write(mapper.writeValueAsString(jsonRequest).getBytes());
                 try (InputStream in = new BufferedInputStream(con.getInputStream())) {

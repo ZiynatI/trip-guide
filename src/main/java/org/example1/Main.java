@@ -5,8 +5,6 @@ import com.typesafe.config.ConfigFactory;
 import org.example.DataGetter;
 import org.example.Train;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
@@ -20,46 +18,25 @@ public class Main {
     }
 
     public static void findTickets() throws TelegramApiException, IOException {
-        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         Config cfg = ConfigFactory.parseFile(new File("application.conf"));
-        Bot bot = new Bot(cfg.getString("telegram.bot.token"), cfg.getString("telegram.bot.username"));
+        String chatId = cfg.getString("telegram.chatId");
+        String botToken = cfg.getString("telegram.bot.token");
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        Bot bot = new Bot(botToken, "ZisTripGuideBot");
+        bot.setButtonsLabels(cities());
         botsApi.registerBot(bot);
-        bot.sendText(cfg.getString("telegram.chatId"), "Hello. Do you want to find ticket?");
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> stationButtons = new ArrayList<>();
-        Map<String, Integer> stationCode = getStationsCode();
-        for (Map.Entry<String, Integer> station : stationCode.entrySet()) {
-            stationButtons.add(
-                    Arrays.asList(
-                            InlineKeyboardButton.builder().text(station.getKey()).callbackData("departure:" + station.getKey()).build(),
-                            InlineKeyboardButton.builder().text(station.getKey()).callbackData("arrival:" + station.getKey()).build()));
-
-        }
-        bot.setStationButtons(stationButtons);
-        bot.sendText(cfg.getString("telegram.chatId"), "please,choose arrival date");
+        bot.sendText(chatId, "If you want to find tickets, tap on \"/choose_station\" command");
         while (true) {
-            if (!bot.getDate().equals("not_selected") && !bot.getDeparture().equals("not_selected") && !bot.getArrival().equals("not_selected")) {
-                DataGetter dataGetter = new DataGetter(bot.getDate(), stationCode.get(bot.getDeparture()),
-                        stationCode.get(bot.getArrival()));
-                String message = trainListToMessage(dataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse()));
-                bot.sendText(cfg.getString("telegram.chatId"), "Tickets from Tashkent to Samarkand for " + bot.getDate() + message);
+            if (!bot.getDeparture().equals("not_selected") && !bot.getArrival().equals("not_selected") && !bot.getDate().equals("not_selected")) {
                 break;
             }
+            System.out.println("while");
         }
-    }
-
-
-    private static String repeatUntilChosenRight
-            (Bot bot, String chatId, String request, InlineKeyboardMarkup markupInLine) {
-        String s = "";
-        boolean isValidRequest = false;
-        bot.sendText(request, chatId);
-        while (!isValidRequest) {
-            s = bot.getFirstMessage();
-//            isValidRequest = validate.apply(s);
-        }
-        bot.clearMessages();
-        return s;
+        bot.sendText(chatId, "Write date when you going to leave\nFormat: 'dd.mm.yyyy';\nExample: '01.01.2024'");
+        DataGetter dataGetter = new DataGetter(bot.getDate(), getStationsCode(bot.getDeparture()),
+                getStationsCode(bot.getArrival()));
+        String message = trainListToMessage(dataGetter.jsonToTrainsList(dataGetter.makeRequestGetResponse()));
+        bot.sendText(chatId, "Tickets from Tashkent to Samarkand for " + bot.getDate() + message + "\n");
     }
 
     private static List<String> cities() {
@@ -85,9 +62,11 @@ public class Main {
         return list;
     }
 
-    private static Map<String, Integer> getStationsCode() {
+    private static int getStationsCode(String station) {
         Map<String, Integer> stationsCode = new HashMap<>();
         stationsCode.put("TASHKENT", 2900000);
+        stationsCode.put("TASHKENT NORTH", 2900001);
+        stationsCode.put("TASHKENT SOUTH", 2900002);
         stationsCode.put("SAMARKAND", 2900700);
         stationsCode.put("BUKHARA", 2900800);
         stationsCode.put("URGENCH", 2900790);
@@ -104,7 +83,7 @@ public class Main {
         stationsCode.put("NAMANGAN", 2900940);
         stationsCode.put("SHYMKENT", 2700770);
         stationsCode.put("ALMATY", 2900000);
-        return stationsCode;
+        return stationsCode.get(station);
     }
 
     private static String trainListToMessage(List<Train> trains) {
